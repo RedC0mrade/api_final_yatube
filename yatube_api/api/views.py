@@ -1,1 +1,7 @@
-# TODO:  Напишите свой вариант
+
+
+
+
+
+class PostViewSet:
+    pass
