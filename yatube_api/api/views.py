@@ -32,6 +32,7 @@ class PostViewSet(viewsets.ModelViewSet):
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -61,13 +62,11 @@ class FollowViewSet(viewsets.ModelViewSet):
     serializer_class = FollowSerializer
     permission_classes = (permissions.IsAuthenticated,)
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('user', 'following')
+    search_fields = ('following',)
 
     def get_queryset(self):
         user = self.request.user
         return user.follow.all()
 
     def perform_create(self, serializer):
-        # if serializer.validate_data['user'] == self.request.user:
-        #     raise PermissionDenied('Подписываться на самого себя запрещено!')
         serializer.save(user=self.request.user)
