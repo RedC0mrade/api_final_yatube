@@ -9,7 +9,6 @@ from .serializers import (CommentSerializer, FollowSerializer,
                           GroupSerializer, PostSerializer)
 
 
-
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
