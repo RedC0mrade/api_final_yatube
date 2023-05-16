@@ -7,7 +7,7 @@ from posts.models import Group, Post
 from .serializers import (CommentSerializer, FollowSerializer,
                           GroupSerializer, PostSerializer)
 from .permissions import AuthorOrReadOnly
-from .utils import GetCreateViewSet
+from .mixin import GetCreateViewSet
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -35,8 +35,8 @@ class CommentViewSet(viewsets.ModelViewSet):
         return get_object_or_404(Post, pk=post_id).comments.all()
 
     def perform_create(self, serializer):
-        post_id = self.kwargs.get('post_id')
-        serializer.save(author=self.request.user, post_id=post_id)
+        post = get_object_or_404(Post, id=self.kwargs.get('post_id'))
+        serializer.save(author=self.request.user, post=post)
 
 
 class FollowViewSet(GetCreateViewSet):

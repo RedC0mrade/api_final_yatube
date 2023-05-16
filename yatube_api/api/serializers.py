@@ -35,6 +35,11 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class FollowSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(
+        default=serializers.CurrentUserDefault()
+    )
+    following = serializers.SlugRelatedField(
+        read_only=False, slug_field='username', queryset=User.objects.all())
 
     class Meta:
         fields = ('id', 'following', 'user')
@@ -44,12 +49,6 @@ class FollowSerializer(serializers.ModelSerializer):
             queryset=Follow.objects.all(),
             fields=['user', 'following']
         )]
-
-    user = serializers.StringRelatedField(
-        default=serializers.CurrentUserDefault()
-    )
-    following = serializers.SlugRelatedField(
-        read_only=False, slug_field='username', queryset=User.objects.all())
 
     def validate_following(self, value):
         if value == self.context['request'].user:
